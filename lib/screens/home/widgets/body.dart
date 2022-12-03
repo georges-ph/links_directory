@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:links_directory/models/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Body extends StatelessWidget {
@@ -9,8 +10,7 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-    late CollectionReference _linksCollection = _firebaseFirestore
+    CollectionReference _linksCollection = FirebaseFirestore.instance
         .collection("LinksDirectory")
         .doc("AppCollections")
         .collection("Links");
@@ -24,15 +24,17 @@ class Body extends StatelessWidget {
           );
         }
 
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
           List<DocumentSnapshot> documents = snapshot.data!.docs;
 
           return Padding(
             padding: const EdgeInsets.all(16),
             child: ListView(
               children: documents.map((document) {
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
+                Link link =
+                    Link.fromMap(document.data()! as Map<String, dynamic>);
+
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     vertical: 6,
@@ -42,13 +44,23 @@ class Body extends StatelessWidget {
                   ),
                   child: ListTile(
                     onTap: () async {
-                      await launch(data["url"]);
-                      _linksCollection.doc(data["id"].toString()).update({
-                        "clicks": FieldValue.increment(1),
-                      });
+                      link = link.copyWith(clicks: link.id + 1);
+
+                      _linksCollection
+                          .doc(link.id.toString())
+                          .update(link.toMap());
+
+                      await launchUrl(Uri.parse(link.url));
                     },
-                    title: Text(data["name"]),
-                    subtitle: Text(data["description"]),
+                    title: Text(link.name),
+                    subtitle: Text(link.description),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.ads_click),
+                        Text(link.clicks.toString()),
+                      ],
+                    ),
                   ),
                 );
               }).toList(),

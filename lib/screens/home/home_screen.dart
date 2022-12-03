@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await launch("https://forms.gle/XH4yUCxco3UdeubW7");
+              await launchUrl(Uri.parse("https://forms.gle/XH4yUCxco3UdeubW7"));
             },
             child: const Text(
               "Feedback",
