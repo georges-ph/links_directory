@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "project-1-b5db1",
+    "production": "jundbits-27eab"
+  },
+  "targets": {},
+  "etags": {}
+}

@@ -27,7 +27,7 @@ doc/api/
 .flutter-plugins-dependencies
 
 # Firebase
-.firebaserc
+# .firebaserc
 .firebase/
 
 # # Old .gitignore before using GitHub Desktop

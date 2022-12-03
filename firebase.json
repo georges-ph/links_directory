@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "testing-e959",
+    "site": "linksdirectory",
     "public": "build/web",
     "ignore": [
       "firebase.json",
