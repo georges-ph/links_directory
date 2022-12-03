@@ -71,6 +71,8 @@
       }).then(function (engineInitializer) {
         return engineInitializer.initializeEngine();
       }).then(function (appRunner) {
+        var loadingIndicator = document.getElementById("loading_indicator");
+        loadingIndicator.remove();
         return appRunner.runApp();
       });
     });
